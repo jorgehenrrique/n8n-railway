@@ -58,10 +58,10 @@ N8N_BASIC_AUTH_USER=admin
 N8N_BASIC_AUTH_PASSWORD=SuaSenhaForte123
 
 # Host e Protocolo
-N8N_HOST=${{RAILWAY_STATIC_URL}}
+N8N_HOST=${{RAILWAY_PUBLIC_DOMAIN}}
 N8N_PORT=5678
 N8N_PROTOCOL=https
-WEBHOOK_URL=https://${{RAILWAY_STATIC_URL}}/
+WEBHOOK_URL=https://${{RAILWAY_PUBLIC_DOMAIN}}/
 
 # Database (conecta automaticamente)
 DATABASE_URL=${{Postgres.DATABASE_URL}}
@@ -85,6 +85,9 @@ N8N_DIAGNOSTICS_ENABLED=false
 N8N_DEFAULT_BINARY_DATA_MODE=filesystem
 N8N_BINARY_DATA_TTL=24
 N8N_EXECUTE_IN_PROCESS=false
+
+# Permissões (resolver aviso)
+N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
 
 # Log
 N8N_LOG_LEVEL=info
@@ -110,13 +113,22 @@ N8N_LOG_LEVEL=info
 
 O Railway conecta automaticamente os serviços através da variável `${{Postgres.DATABASE_URL}}`.
 
+**⚠️ ATENÇÃO:** Use APENAS `DATABASE_URL` e `DB_TYPE` para configuração do banco!
+
 **Verificar conexão:**
 
 1. Vá para o serviço PostgreSQL
 2. Copie a `DATABASE_URL` (ela será algo como `postgresql://postgres:senha@host:5432/railway`)
-3. No serviço N8N, configure: `DATABASE_URL=${{Postgres.DATABASE_URL}}`
+3. No serviço N8N, configure APENAS:
+   ```bash
+   DATABASE_URL=${{Postgres.DATABASE_URL}}
+   DB_TYPE=postgresdb
+   ```
 
-**⚠️ IMPORTANTE:** O nome "Postgres" deve corresponder ao nome do seu serviço de banco!
+**⚠️ IMPORTANTE:**
+
+- O nome "Postgres" deve corresponder ao nome do seu serviço de banco!
+- **NÃO** adicione `DB_POSTGRESDB_HOST`, `DB_POSTGRESDB_PORT`, etc.
 
 ## 🛠️ Desenvolvimento Local
 
@@ -141,14 +153,40 @@ http://localhost:5678
 
 ## 🔍 Solução de Problemas
 
-### ❌ "Database connection failed"
+### ❌ "Database connection failed" / "connect ECONNREFUSED ::1:5432"
+
+**Este erro indica que o n8n está tentando conectar localmente ao invés do PostgreSQL do Railway.**
 
 **Soluções:**
 
-1. Verifique se o PostgreSQL foi adicionado ao projeto
-2. Confirme que `DATABASE_URL=${{Postgres.DATABASE_URL}}` está configurado
-3. Verifique se o nome "Postgres" corresponde ao nome do seu serviço de banco
-4. Aguarde 2-3 minutos após criar o banco
+1. **MAIS IMPORTANTE:** Certifique-se de que `DATABASE_URL=${{Postgres.DATABASE_URL}}` está configurado
+2. **NÃO** configure `DB_POSTGRESDB_HOST`, `DB_POSTGRESDB_PORT`, etc. (isso força conexão local)
+3. Use APENAS estas variáveis de banco:
+   ```bash
+   DATABASE_URL=${{Postgres.DATABASE_URL}}
+   DB_TYPE=postgresdb
+   ```
+4. Verifique se o nome "Postgres" corresponde ao nome do seu serviço de banco
+5. **Remova** qualquer variável que comece com `DB_POSTGRESDB_`
+6. Aguarde 2-3 minutos após criar o banco
+
+### ❌ "Permissions 0644 for n8n settings file are too wide"
+
+**Este é apenas um aviso de segurança, não impede o funcionamento.**
+
+**Solução (opcional):**
+
+```bash
+# Adicione esta variável para aplicar permissões automaticamente
+N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+```
+
+**Ou ignore o aviso:**
+
+```bash
+# Adicione esta variável para desabilitar o aviso
+N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
+```
 
 ### ❌ "Não consigo acessar o N8N - Sem link/domínio"
 
@@ -165,7 +203,7 @@ http://localhost:5678
 **Soluções:**
 
 1. Verifique se todas as variáveis obrigatórias estão configuradas
-2. Confirme que `N8N_HOST` usa `${{RAILWAY_STATIC_URL}}`
+2. Confirme que `N8N_HOST` usa `${{RAILWAY_PUBLIC_DOMAIN}}`
 3. Certifique-se de que gerou o domínio público (passo acima)
 4. Verifique se o build foi concluído com sucesso
 
