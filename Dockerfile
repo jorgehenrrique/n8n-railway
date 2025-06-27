@@ -17,8 +17,11 @@ ENV TZ=America/Sao_Paulo
 ENV N8N_METRICS=true
 ENV N8N_DIAGNOSTICS_ENABLED=false
 
+# IMPORTANTE: Forçar carregamento de variáveis de ambiente
+ENV N8N_CONFIG_FILES=""
+
 # Expor porta
 EXPOSE 5678
 
-# Comando padrão
-CMD ["n8n", "start"]
+# Comando padrão - usar apenas "start" baseado nos templates funcionais
+CMD ["start"]

@@ -59,7 +59,7 @@ N8N_BASIC_AUTH_PASSWORD=SuaSenhaForte123
 
 # Host e Protocolo
 N8N_HOST=${{RAILWAY_PUBLIC_DOMAIN}}
-N8N_PORT=5678
+# N8N_PORT=5678
 N8N_PROTOCOL=https
 WEBHOOK_URL=https://${{RAILWAY_PUBLIC_DOMAIN}}/
 
@@ -68,12 +68,14 @@ DATABASE_URL=${{Postgres.DATABASE_URL}}
 DB_TYPE=postgresdb
 
 # Timezone
-GENERIC_TIMEZONE=America/Sao_Paulo
 TZ=America/Sao_Paulo
 
 # SSL/Segurança
 N8N_SECURE_COOKIE=true
 N8N_FORCE_SSL=true
+
+# CRÍTICO: Prevenir carregamento de config local
+N8N_CONFIG_FILES=""
 ```
 
 #### 🔧 Variáveis Opcionais
@@ -82,9 +84,6 @@ N8N_FORCE_SSL=true
 # Performance
 N8N_METRICS=true
 N8N_DIAGNOSTICS_ENABLED=false
-N8N_DEFAULT_BINARY_DATA_MODE=filesystem
-N8N_BINARY_DATA_TTL=24
-N8N_EXECUTE_IN_PROCESS=false
 
 # Permissões (resolver aviso)
 N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
@@ -100,7 +99,8 @@ N8N_LOG_LEVEL=info
 1. No serviço N8N (`n8n-railway`), vá para a aba "Settings"
 2. Clique em "Generate Domain"
 3. Railway criará uma URL como: `https://n8n-railway-production-xxxx.up.railway.app`
-4. **Copie essa URL** - você precisará dela!
+4. Confirme a porta: 5678
+5. **Copie essa URL** - você precisará dela!
 
 ### 6. Deploy Automático
 
@@ -155,7 +155,7 @@ http://localhost:5678
 
 ### ❌ "Database connection failed" / "connect ECONNREFUSED ::1:5432"
 
-**Este erro indica que o n8n está tentando conectar localmente ao invés do PostgreSQL do Railway.**
+**Este erro indica que o n8n está carregando configurações do arquivo local `/home/node/.n8n/config` ao invés das variáveis de ambiente.**
 
 **Soluções:**
 
