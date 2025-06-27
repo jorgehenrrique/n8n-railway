@@ -21,6 +21,49 @@ n8n-railway/
 └── README.md          # Esta documentação
 ```
 
+## ✅ **CONFIGURAÇÃO FUNCIONAL TESTADA**
+
+### **📋 Variáveis que FUNCIONAM (baseadas no template oficial Railway):**
+
+```bash
+# ✅ AUTENTICAÇÃO
+N8N_BASIC_AUTH_ACTIVE=true
+N8N_BASIC_AUTH_USER=seu_usuario
+N8N_BASIC_AUTH_PASSWORD=sua_senha_forte
+
+# ✅ ENCRYPTION (CRÍTICO!)
+N8N_ENCRYPTION_KEY=Do5HiQ8gc0DRGI1s6N4s/V1SbBY4GSIwQ+0cDFu433o=
+
+# ✅ HOST
+N8N_HOST=${{RAILWAY_PUBLIC_DOMAIN}}
+N8N_PROTOCOL=https
+WEBHOOK_URL=https://${{RAILWAY_PUBLIC_DOMAIN}}/
+
+# ✅ DATABASE (VARIÁVEIS INDIVIDUAIS)
+DB_POSTGRESDB_DATABASE=${{Postgres.POSTGRES_DB}}
+DB_POSTGRESDB_HOST=${{Postgres.PGHOST}}
+DB_POSTGRESDB_PASSWORD=${{Postgres.POSTGRES_PASSWORD}}
+DB_POSTGRESDB_PORT=${{Postgres.PGPORT}}
+DB_POSTGRESDB_USER=${{Postgres.POSTGRES_USER}}
+DB_TYPE=postgresdb
+
+# ✅ TIMEZONE
+TZ=America/Sao_Paulo
+
+# ✅ TASK RUNNERS (REMOVE WARNING)
+N8N_RUNNERS_ENABLED=true
+
+# ✅ OPCIONAIS
+N8N_SECURE_COOKIE=true
+N8N_FORCE_SSL=true
+N8N_METRICS=true
+N8N_DIAGNOSTICS_ENABLED=false
+N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+N8N_LOG_LEVEL=info
+```
+
+---
+
 ## 🚀 Deploy no Railway
 
 ### 1. Preparar Repositório GitHub
@@ -155,20 +198,29 @@ http://localhost:5678
 
 ### ❌ "Database connection failed" / "connect ECONNREFUSED ::1:5432"
 
-**Este erro indica que o n8n está carregando configurações do arquivo local `/home/node/.n8n/config` ao invés das variáveis de ambiente.**
+**SOLUÇÃO COMPROVADA:**
 
-**Soluções:**
+Use **variáveis individuais do PostgreSQL** (baseado no template oficial Railway):
 
-1. **MAIS IMPORTANTE:** Certifique-se de que `DATABASE_URL=${{Postgres.DATABASE_URL}}` está configurado
-2. **NÃO** configure `DB_POSTGRESDB_HOST`, `DB_POSTGRESDB_PORT`, etc. (isso força conexão local)
-3. Use APENAS estas variáveis de banco:
-   ```bash
-   DATABASE_URL=${{Postgres.DATABASE_URL}}
-   DB_TYPE=postgresdb
-   ```
-4. Verifique se o nome "Postgres" corresponde ao nome do seu serviço de banco
-5. **Remova** qualquer variável que comece com `DB_POSTGRESDB_`
-6. Aguarde 2-3 minutos após criar o banco
+```bash
+# ✅ FUNCIONA - Variáveis individuais
+DB_POSTGRESDB_DATABASE=${{Postgres.POSTGRES_DB}}
+DB_POSTGRESDB_HOST=${{Postgres.PGHOST}}
+DB_POSTGRESDB_PASSWORD=${{Postgres.POSTGRES_PASSWORD}}
+DB_POSTGRESDB_PORT=${{Postgres.PGPORT}}
+DB_POSTGRESDB_USER=${{Postgres.POSTGRES_USER}}
+DB_TYPE=postgresdb
+
+# ❌ NÃO FUNCIONA - DATABASE_URL
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+```
+
+**Ordem de configuração:**
+
+1. Adicione PostgreSQL ao projeto
+2. Configure as variáveis individuais exatamente como acima
+3. Adicione `N8N_ENCRYPTION_KEY` (obrigatório)
+4. Deploy
 
 ### ❌ "Permissions 0644 for n8n settings file are too wide"
 
