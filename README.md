@@ -64,7 +64,7 @@ N8N_PROTOCOL=https
 WEBHOOK_URL=https://${{RAILWAY_STATIC_URL}}/
 
 # Database (conecta automaticamente)
-DATABASE_URL=${{DATABASE_URL}}
+DATABASE_URL=${{Postgres.DATABASE_URL}}
 DB_TYPE=postgresdb
 
 # Timezone
@@ -90,22 +90,33 @@ N8N_EXECUTE_IN_PROCESS=false
 N8N_LOG_LEVEL=info
 ```
 
-### 5. Deploy Automático
+### 5. Gerar Domínio Público
+
+**IMPORTANTE:** Para acessar seu N8N, você precisa gerar um domínio público:
+
+1. No serviço N8N (`n8n-railway`), vá para a aba "Settings"
+2. Clique em "Generate Domain"
+3. Railway criará uma URL como: `https://n8n-railway-production-xxxx.up.railway.app`
+4. **Copie essa URL** - você precisará dela!
+
+### 6. Deploy Automático
 
 1. O Railway detectará automaticamente o `Dockerfile`
 2. O build começará automaticamente
 3. Aguarde 5-10 minutos para conclusão
-4. Acesse via URL fornecida pelo Railway
+4. Acesse via URL gerada no passo anterior
 
 ## 🔗 Conectar Serviços
 
-O Railway conecta automaticamente os serviços através da variável `${{DATABASE_URL}}`.
+O Railway conecta automaticamente os serviços através da variável `${{Postgres.DATABASE_URL}}`.
 
 **Verificar conexão:**
 
 1. Vá para o serviço PostgreSQL
-2. Copie a `DATABASE_URL`
-3. Verifique se está referenciada no serviço N8N
+2. Copie a `DATABASE_URL` (ela será algo como `postgresql://postgres:senha@host:5432/railway`)
+3. No serviço N8N, configure: `DATABASE_URL=${{Postgres.DATABASE_URL}}`
+
+**⚠️ IMPORTANTE:** O nome "Postgres" deve corresponder ao nome do seu serviço de banco!
 
 ## 🛠️ Desenvolvimento Local
 
@@ -135,8 +146,19 @@ http://localhost:5678
 **Soluções:**
 
 1. Verifique se o PostgreSQL foi adicionado ao projeto
-2. Confirme que `DATABASE_URL=${{DATABASE_URL}}` está configurado
-3. Aguarde 2-3 minutos após criar o banco
+2. Confirme que `DATABASE_URL=${{Postgres.DATABASE_URL}}` está configurado
+3. Verifique se o nome "Postgres" corresponde ao nome do seu serviço de banco
+4. Aguarde 2-3 minutos após criar o banco
+
+### ❌ "Não consigo acessar o N8N - Sem link/domínio"
+
+**Solução:**
+
+1. Vá para o serviço N8N (`n8n-railway`) no Railway
+2. Clique na aba "Settings"
+3. Clique em "Generate Domain"
+4. Aguarde a geração da URL pública
+5. Acesse via URL gerada
 
 ### ❌ "Service unavailable"
 
@@ -144,7 +166,8 @@ http://localhost:5678
 
 1. Verifique se todas as variáveis obrigatórias estão configuradas
 2. Confirme que `N8N_HOST` usa `${{RAILWAY_STATIC_URL}}`
-3. Verifique se o build foi concluído com sucesso
+3. Certifique-se de que gerou o domínio público (passo acima)
+4. Verifique se o build foi concluído com sucesso
 
 ### ❌ "SSL/HTTPS errors"
 
