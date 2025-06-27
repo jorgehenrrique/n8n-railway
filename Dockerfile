@@ -5,15 +5,20 @@ USER root
 RUN apk add --no-cache \
     python3 \
     py3-pip \
-    git
+    git \
+    curl
 
 USER node
 
 # Configurar timezone
 ENV TZ=America/Sao_Paulo
 
+# Configurar n8n para production
+ENV N8N_METRICS=true
+ENV N8N_DIAGNOSTICS_ENABLED=false
+
 # Expor porta
 EXPOSE 5678
 
 # Comando padrão
-CMD ["n8n"]
+CMD ["n8n", "start"]

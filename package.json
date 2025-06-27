@@ -16,5 +16,12 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "keywords": [
+    "n8n",
+    "automation",
+    "workflow",
+    "railway"
+  ],
+  "license": "MIT"
 }
