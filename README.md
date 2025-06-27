@@ -6,7 +6,7 @@ Deploy da plataforma de automação N8N no Railway com PostgreSQL.
 
 **Use o template oficial testado e funcional:**
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/BqsFX6?referralCode=gandalf)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/simple-n8n?referralCode=gandalf)
 
 ### **⚡ Vantagens do Template:**
 
@@ -387,7 +387,7 @@ Após seguir esta documentação **testada e aprovada**, seu N8N estará 100% fu
 
 ### 🚀 **Opção 1: Template Railway (RECOMENDADO)**
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/BqsFX6?referralCode=gandalf)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/simple-n8n?referralCode=gandalf)
 
 **✅ Vantagens:**
 
