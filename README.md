@@ -19,7 +19,8 @@ Deploy da plataforma de automação N8N no Railway com PostgreSQL.
 
 1. **Gere uma nova encryption key** (não use a padrão!)
 2. **Altere usuário/senha** do Basic Auth
-3. **Acesse seu N8N** - Pronto para usar!
+3. **Edite a porta do domínio público** defina a porta 5678
+4. **Acesse seu N8N** - Pronto para usar!
 
 ---
 
@@ -336,7 +337,7 @@ O Railway fornece HTTPS automaticamente com certificados SSL gratuitos.
 
 ### Railway Starter Plan (Gratuito)
 
-- $5 de crédito mensal
+- $5 de crédito por um mês (1 mês)
 - Suficiente para testes e projetos pequenos
 
 ### Railway Hobby Plan
